@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:islami_c19_prod/generated/assets.dart';
 import 'package:islami_c19_prod/models/tab_info.dart';
-
 import 'package:islami_c19_prod/utils/app_colors.dart';
 
 import '../tabs/quran_tab /quran_tab_content.dart';
+
+import '../tabs/radio_tabs/radio_tab.dart';
+import '../tabs/sebha_tabs/sebha_tab.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
@@ -15,6 +17,7 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout> {
   int selectedIndex = 0;
+
   List<TabInfo> tabs = [
     TabInfo(
       iconPath: Assets.images.quranIc.path,
@@ -22,24 +25,28 @@ class _MainLayoutState extends State<MainLayout> {
       content: const QuranTabContent(),
       label: "Quran",
     ),
+
     TabInfo(
       iconPath: Assets.images.hadeethIc.path,
       backgroundImage: Assets.images.backHomeImage.path,
       content: Container(),
       label: "Hadeeth",
     ),
+
     TabInfo(
       iconPath: Assets.images.sebhaIc.path,
-      backgroundImage: Assets.images.backHomeImage.path,
-      content: Container(),
+      backgroundImage: "",
+      content: const SebhaTab(),
       label: "Sebha",
     ),
+
     TabInfo(
       iconPath: Assets.images.radioIc.path,
       backgroundImage: Assets.images.backHomeImage.path,
-      content: Container(),
+      content: const RadioTab(),
       label: "Radio",
     ),
+
     TabInfo(
       iconPath: Assets.images.timeIc.path,
       backgroundImage: Assets.images.backHomeImage.path,
@@ -61,13 +68,14 @@ class _MainLayoutState extends State<MainLayout> {
         backgroundColor: AppColors.primary,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         indicatorColor: AppColors.darkBrown.withValues(alpha: .6),
-        labelTextStyle: WidgetStateProperty.all(TextStyle(color: Colors.white)),
+        labelTextStyle: WidgetStateProperty.all(
+          const TextStyle(color: Colors.white),
+        ),
         destinations: List.generate(
           tabs.length,
-              (index) => NavigationDestination(
+          (index) => NavigationDestination(
             icon: ImageIcon(AssetImage(tabs[index].iconPath)),
             label: tabs[index].label,
-
             selectedIcon: ImageIcon(
               AssetImage(tabs[index].iconPath),
               color: Colors.white,
@@ -77,13 +85,14 @@ class _MainLayoutState extends State<MainLayout> {
       ),
       body: Stack(
         children: [
-          Image.asset(
-            tabs[selectedIndex].backgroundImage,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          SafeArea(child: tabs[selectedIndex].content),
+          if (tabs[selectedIndex].backgroundImage.isNotEmpty)
+            Image.asset(
+              tabs[selectedIndex].backgroundImage,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          tabs[selectedIndex].content,
         ],
       ),
     );
